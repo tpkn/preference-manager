@@ -1,0 +1,13 @@
+{
+  "name": "preference-manager",
+  "main": "preference-manager.js",
+  "version": "1.1.4",
+  "author": {
+    "url": "https://github.com/tpkn/"
+  },
+  "license": "MIT",
+  "keywords": [
+    "preference",
+    "manager"
+  ]
+}
