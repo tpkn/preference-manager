@@ -1,5 +1,5 @@
-/**
- * Preference Manager (v1.1.7.20170318), http://tpkn.me/
+/*!
+ * Preference Manager (v1.1.6.20170318), http://tpkn.me/
  */
 
 const fs = require('fs');
