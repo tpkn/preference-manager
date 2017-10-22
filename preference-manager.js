@@ -1,13 +1,18 @@
 /*!
- * Preference Manager (v1.1.6.20170318), http://tpkn.me/
+ * Preference Manager (v1.2.1.20171022), http://tpkn.me/
  */
 
 const fs = require('fs');
 const path = require('path');
 
 class PreferenceManager {
-   constructor(){
-      this.config_file = path.join(process.cwd(), "config.cfg");
+   constructor(config_path){
+      if(typeof config_path === 'undefined'){
+         let filename = new Buffer(process.argv[1]).toString('base64');
+         // filename = filename.substr(0, filename.length / 2);
+         config_path = path.join(process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + 'Library/Preferences' : '/var/local'), filename);
+      }
+      this.config_file = config_path;
    }
 
    /**
@@ -27,8 +32,8 @@ class PreferenceManager {
     * @param  {Object} data
     */
    save(data){
-      if(typeof data === 'undefined') throw new Error("No arguments were passed");
-      if(Object.keys(data).length === 0) throw new Error("Data is too short");
+      if(typeof data === 'undefined') throw new Error('No arguments were passed');
+      if(Object.keys(data).length === 0) throw new Error('Data is too short');
 
       /**
        * Template for quick save
@@ -48,4 +53,4 @@ class PreferenceManager {
    }
 }
 
-module.exports = new PreferenceManager;
+module.exports = PreferenceManager;
