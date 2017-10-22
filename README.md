@@ -1,3 +1,20 @@
+# preference-manager
+
+Save your app prefs into local config file
+
+
+### Usage
+```javascript
+const PreferenceManager = require('preference-manager');
+
+// Manual path: C:\Users\username\Desktop\node-test\.config-my-lalala
+let pm = new PreferenceManager(path.join(process.cwd(), '.config-my-lalala'));
+
+// If path is not set, module create config file based on your app.js file path in base64 format:
+// C:\Users\username\AppData\Roaming\QzpcVXNlcnNcbGFsYWxhXERlc2t0
+// let pm = new PreferenceManager();
+```
+
 
 ### Save
 ```javascript
@@ -13,10 +30,10 @@ pm.save(BrowserWindow);
 ### Load
 ```javascript
 var prefs = pm.load();
-if(prefs.hasOwnProperty('x') && prefs.hasOwnProperty('y')){
+if(prefs.x && prefs.y){
     win.setPosition(prefs.x, prefs.y);
 }
-if(prefs.hasOwnProperty('width') && prefs.hasOwnProperty('height')){
+if(prefs.width && prefs.height){
     win.setSize(prefs.width, prefs.height);
 }
 ```
