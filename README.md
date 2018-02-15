@@ -14,8 +14,7 @@ app.on('ready', function(){
       pm.quicksave();
    });
 });
-``
-`
+```
 
 ### Load and apply settings to the window
 ```javascript
@@ -31,7 +30,7 @@ pm.save({a: 1, b: 2, c: {d: 3}});
 ```
 
 
-### Save settings and remove `empty` props
+### Save settings and remove `empty` ones
 ```javascript
 pm.save({a: null, b: 2, c: {d: null}, d: new Date}, true);
 // => {b: 2, d: "2011-02-15T11:22:40.263Z"}
