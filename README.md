@@ -1,5 +1,5 @@
 # Preference Manager
-Save your app setting to a local file
+Save your Electron app setting to a local file
 
 Quick save and load app window settings with a single line of code. Auto-remove empty settings and many more features. 
 Module works both in main and render processes.
