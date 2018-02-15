@@ -1,0 +1,18 @@
+{
+   "name": "preference-manager",
+   "main": "preference-manager.js",
+   "version": "2.0.0",
+   "author": {
+      "url": "https://github.com/tpkn/"
+   },
+   "repository": "https://github.com/tpkn/preference-manager",
+   "license": "MIT",
+   "keywords": [
+      "preference",
+      "manager",
+      "electron",
+      "settings",
+      "save",
+      "load"
+   ]
+}

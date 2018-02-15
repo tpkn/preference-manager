@@ -1,39 +1,80 @@
-# preference-manager
+# Preference Manager
+Save your app setting to a local file
 
-Save your app prefs into local config file
+Quick save and load app window settings with a single line of code. Auto-remove empty settings and many more features. 
+Module works both in main and render processes.
 
 
-### Usage
+### Quick save window params `{x, y, width, height}`
 ```javascript
-const PreferenceManager = require('preference-manager');
+const pm = require('preference-manager');
 
-// Manual path: C:\Users\username\Desktop\node-test\.config-my-lalala
-let pm = new PreferenceManager(path.join(process.cwd(), '.config-my-lalala'));
+app.on('ready', function(){
+   win.on('close', function(){
+      pm.quicksave();
+   });
+});
+``
+`
 
-// If path is not set, module create config file based on your app.js file path in base64 format:
-// C:\Users\username\AppData\Roaming\QzpcVXNlcnNcbGFsYWxhXERlc2t0
-// let pm = new PreferenceManager();
+### Load and apply settings to the window
+```javascript
+app.on('ready', function(){
+   pm.quickload();
+});
 ```
 
 
-### Save
+### Save custom settings
 ```javascript
-pm.save({x: 123, y: 456, width: 800, height: 600, godmod: true});
+pm.save({a: 1, b: 2, c: {d: 3}});
 ```
 
-### Quick save
-This is 'lazy' method. Out of the box it saves four default params `{x, y, width, height}`. Link to current `BrowserWindow` is required!
+
+### Save settings and remove `empty` props
 ```javascript
-pm.save(BrowserWindow);
+pm.save({a: null, b: 2, c: {d: null}, d: new Date}, true);
+// => {b: 2, d: "2011-02-15T11:22:40.263Z"}
 ```
+
 
 ### Load
 ```javascript
-var prefs = pm.load();
-if(prefs.x && prefs.y){
-    win.setPosition(prefs.x, prefs.y);
-}
-if(prefs.width && prefs.height){
-    win.setSize(prefs.width, prefs.height);
-}
+pm.load();
+// => {a: 1, b: 2, c: {d: 3}}
 ```
+
+
+### Delete all
+```javascript
+pm.flush();
+// => {}
+```
+
+
+### List all settings (with `beautify = true`)
+```javascript
+pm.list(true);
+/*
+   { 
+      a: 1, 
+      b: 2, 
+      c: {
+         d: 3
+      }
+   }
+*/
+```
+
+### Get settings file
+```javascript
+pm.file;
+//=> C:\Users\me\AppData\Roaming\app\.settings
+```
+
+
+
+## Changelog 
+#### 2018-02-13:
+- v2.0.0 Rewritten from ground up. Added few more stuff to manage your settings. 
+

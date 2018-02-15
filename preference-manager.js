@@ -1,56 +1,167 @@
 /*!
- * Preference Manager (v1.2.1.20171022), http://tpkn.me/
+ * Preference Manager (v2.0.0.20180211), http://tpkn.me/
  */
 
 const fs = require('fs');
 const path = require('path');
+const electron = require('electron');
+const app = electron.app || electron.remote.app;
+const BrowserWindow = electron.BrowserWindow || electron.remote.BrowserWindow;
 
 class PreferenceManager {
-   constructor(config_path){
-      if(typeof config_path === 'undefined'){
-         let filename = new Buffer(process.argv[1]).toString('base64');
-         // filename = filename.substr(0, filename.length / 2);
-         config_path = path.join(process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + 'Library/Preferences' : '/var/local'), filename);
-      }
-      this.config_file = config_path;
+   constructor(){
+      this.file = path.join(app.getPath('userData'), '.settings');
+
+      // Check if .settings file is OK
+      this.load();
    }
 
    /**
-    * Load prefs
+    * Load settings
+    * 
     * @return {Object}
     */
    load(){
       let data = {};
-      if(fs.existsSync(this.config_file)){
-         data = JSON.parse(fs.readFileSync(this.config_file, 'utf8'));
+
+      try {
+         data = JSON.parse(fs.readFileSync(this.file, 'utf8'));
+      }catch(e){
+         fs.writeFileSync(this.file, JSON.stringify({}), 'utf8');
       }
+
       return data;
    }
 
    /**
-    * Save prefs
-    * @param  {Object} data
+    * Save settings
+    * 
+    * @param {Object} data
+    * @param {Boolean} do_cleanup
     */
-   save(data){
-      if(typeof data === 'undefined') throw new Error('No arguments were passed');
-      if(Object.keys(data).length === 0) throw new Error('Data is too short');
+   save(data = {}, do_cleanup = false){
+      let last_settings = this.load();
+      let settings = Object.assign(last_settings, data);
 
-      /**
-       * Template for quick save
-       */
-      if(data && data._events && data._events.closed){
-         data = {x: data.getPosition()[0], y: data.getPosition()[1], width: data.getSize()[0], height: data.getSize()[1]};
+      // Remove settings == 'null'
+      if(do_cleanup){
+         this.cleanup(settings);
       }
 
-      let save_data = data;
-      if(fs.existsSync(this.config_file)){
-         save_data = this.load();
-         for (let i in data){
-            save_data[i] = data[i];
+      fs.writeFileSync(this.file, JSON.stringify(settings, true, 3));
+   }
+
+   /**
+    * Load and apply settings to the window
+    * 
+    * @param  {Object} win - BrowserWindow instance
+    * @return {Object}
+    */
+   quickload(win = {}){
+      let data = this.load();
+
+      if(win.constructor !== BrowserWindow){
+         win = BrowserWindow.getFocusedWindow();
+      }
+
+      // Move and resize window if BrowserWindow instance were passed
+      let { x, y, width, height } = data;
+      if(x && y){
+          win.setPosition(x, y);
+      }
+      if(width && height){
+         win.setSize(width, height);
+      }
+
+      return data;
+   }
+
+   /**
+    * Save window props
+    * 
+    * @param {Object} win
+    * @param {Boolean} do_cleanup
+    */
+   quicksave(win = {}, do_cleanup = false){
+      let data = {};
+
+      if(win.constructor !== BrowserWindow){
+         win = BrowserWindow.getFocusedWindow();
+      }
+      
+      // Template for quick save -> BrowserWindow{x, y, width, height}
+      data = {
+         x: win.getPosition()[0], 
+         y: win.getPosition()[1], 
+         width: win.getSize()[0], 
+         height: win.getSize()[1]
+      };
+
+      let last_settings = this.load();
+      let settings = Object.assign(last_settings, data);
+
+      // Remove useless settings
+      if(do_cleanup){
+         this.cleanup(settings);
+      }
+
+      fs.writeFileSync(this.file, JSON.stringify(settings, true, 3));
+   }
+
+   /**
+    * Delete empty settings
+    * 
+    * @param  {Object} data
+    * @return {Object}
+    */
+   cleanup(data){
+      let loop = (obj) => {
+         for(let i in obj){
+            let val = obj[i];
+            let is_object = val instanceof Object && val.constructor === Object;
+
+            if(val == null){
+               delete obj[i];
+            }
+
+            if(is_object){
+               loop(val);
+            }
+
+            if(is_object && Object.keys(val).length == 0){
+               delete obj[i];
+            }
          }
+
+         return obj;
       }
-      fs.writeFileSync(this.config_file, JSON.stringify(save_data));
+
+      return loop(data);
+   }
+
+   /**
+    * List all saved settings
+    * @return {Object}
+    */
+   list(beautify = false){
+      let data = this.load();
+
+      if(beautify){
+         data = JSON.stringify(data, true, 3);
+      }
+
+      return data;
+   }
+
+   /**
+    * Flush all settings
+    * @return {Object}
+    */
+   flush(){
+      fs.writeFileSync(this.file, JSON.stringify({}), 'utf8');
+
+      return {};
    }
 }
 
-module.exports = PreferenceManager;
+module.exports = new PreferenceManager();
