@@ -1,5 +1,5 @@
 /*!
- * Preference Manager (v2.0.0.20180211), http://tpkn.me/
+ * Preference Manager (v2.0.1.20180304), http://tpkn.me/
  */
 
 const fs = require('fs');
@@ -10,7 +10,13 @@ const BrowserWindow = electron.BrowserWindow || electron.remote.BrowserWindow;
 
 class PreferenceManager {
    constructor(){
-      this.file = path.join(app.getPath('userData'), '.settings');
+      this.dir = app.getPath('userData');
+      this.file = path.join(this.dir, '.settings');
+
+      // Create app's 'userData' folder if it does not exist
+      if(!fs.existsSync(this.dir)){
+         fs.mkdirSync(this.dir);
+      }
 
       // Check if .settings file is OK
       this.load();

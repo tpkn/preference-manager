@@ -72,8 +72,10 @@ pm.file;
 ```
 
 
-
 ## Changelog 
+#### 2018-03-04:
+- v2.0.1 Fixed bug, when app trying to save setting but app's `userData` folder does not exist yet
+
 #### 2018-02-13:
-- v2.0.0 Rewritten from ground up. Added few more stuff to manage your settings. 
+- v2.0.0 Rewritten from ground up. Added few more stuff to manage your settings
 
