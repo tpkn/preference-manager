@@ -73,6 +73,9 @@ pm.file;
 
 
 ## Changelog 
+#### 2018-03-15:
+- v2.0.2 Now `quickload` method will never position your app outside the screen bounds (if, for example, you disabled the second monitor, where was your app on)
+
 #### 2018-03-04:
 - v2.0.1 Fixed bug, when app trying to save setting but app's `userData` folder does not exist yet
 

@@ -1,5 +1,5 @@
 /*!
- * Preference Manager (v2.0.1.20180304), http://tpkn.me/
+ * Preference Manager (v2.0.2.20180315), http://tpkn.me/
  */
 
 const fs = require('fs');
@@ -72,12 +72,19 @@ class PreferenceManager {
 
       // Move and resize window if BrowserWindow instance were passed
       let { x, y, width, height } = data;
+      let { screen_width, screen_height } = this.bounds();
+
       if(x && y){
-          win.setPosition(x, y);
+         if(x >= screen_width) x = 0;
+         if(y >= screen_height) y = 0;
+
+         win.setPosition(x, y);
       }
       if(width && height){
          win.setSize(width, height);
       }
+
+      console.log(x, y);
 
       return data;
    }
@@ -167,6 +174,26 @@ class PreferenceManager {
       fs.writeFileSync(this.file, JSON.stringify({}), 'utf8');
 
       return {};
+   }
+
+   /**
+    * Get screen width and height
+    * 
+    * @return {Object}
+    */
+   bounds(){
+      let screen_width = 0;
+      let screen_height = 0;
+      
+      let screen = electron.screen || electron.remote.screen;
+      let displays = screen.getAllDisplays();
+
+      for(let i = 0, len = displays.length; i < len; i++){
+         screen_width += displays[i].bounds.width;
+         screen_height += displays[i].bounds.height;
+      }
+
+      return { screen_width, screen_height };
    }
 }
 
