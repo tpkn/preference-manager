@@ -5,6 +5,13 @@ Quick save and load app window settings with a single line of code. Auto-remove 
 Module works both in main and render processes.
 
 
+## Installation
+```bash
+npm install preference-manager
+```
+
+
+
 ### Quick save window params `{x, y, width, height}`
 ```javascript
 const pm = require('preference-manager');

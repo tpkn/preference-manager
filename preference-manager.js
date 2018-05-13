@@ -1,5 +1,5 @@
 /*!
- * Preference Manager (v2.0.2.20180315), http://tpkn.me/
+ * Preference Manager, http://tpkn.me/
  */
 
 const fs = require('fs');
@@ -83,8 +83,6 @@ class PreferenceManager {
       if(width && height){
          win.setSize(width, height);
       }
-
-      console.log(x, y);
 
       return data;
    }
