@@ -1,4 +1,4 @@
-# Preference Manager [![npm Package](https://img.shields.io/npm/v/preference-manager.svg)](https://www.npmjs.org/package/)
+# Preference Manager [![npm Package](https://img.shields.io/npm/v/preference-manager.svg)](https://www.npmjs.org/package/preference-manager)
 Save your Electron app setting to a local file
 
 Quick save and load app window settings with a single line of code. Auto-remove empty settings and many more features. 
